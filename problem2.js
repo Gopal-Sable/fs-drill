@@ -30,25 +30,29 @@ function generateRandomName() {
 }
 const getRandomFilename = generateRandomName();
 
-function processUpperCase(callback) {
+function readFile(callback) {
   fs.readFile("lipsum.txt", "utf8", (err, data) => {
     if (err) {
       console.error("Error reading lipsum.txt: " + err.message);
     } else {
-      let upperCaseData = data.toUpperCase();
-      const upperCaseFileName = getRandomFilename();
-      fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
-        if (err) {
-          console.error("Error in writting uppercase  file " + err.message);
-          return;
-        }
-        console.log(upperCaseFileName+" created");
-        
-        appendFilename(upperCaseFileName, () => {
-          callback(upperCaseFileName);
-        });
-      });
+      callback(data);
     }
+  });
+}
+
+function processUpperCase(data, callback) {
+  let upperCaseData = data.toUpperCase();
+  const upperCaseFileName = getRandomFilename();
+  fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
+    if (err) {
+      console.error("Error in writting uppercase  file " + err.message);
+      return;
+    }
+    console.log(upperCaseFileName + " created");
+
+    appendFilename(upperCaseFileName, () => {
+      callback(upperCaseFileName);
+    });
   });
 }
 
@@ -74,15 +78,37 @@ function processLowerCase(inputFileName, callback) {
   });
 }
 
-processUpperCase((upperCaseFileName) => {
-  processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
-    console.log("lowerCase file created", lowerCaseFileName);
+function processSort(inputFile, callback) {
+  fs.readFile(inputFile, "utf8", (err, data) => {
+    if (err) {
+      return console.error("Error reading lowercase file:", err.message);
+    }
+
+    const sortedFile = getRandomFilename();
+    const sortedData = data
+      .split(" ")
+      .sort((a, b) => a.localeCompare(b))
+      .join(" ");
+
+    fs.writeFile(sortedFile, sortedData, (err) => {
+      if (err) {
+        return console.error("Error writing sorted file:", err.message);
+      }
+      console.log(`Sorted file created: ${sortedFile}`);
+      appendFilename(sortedFile, () => {
+        callback(sortedFile);
+      });
+    });
+  });
+}
+
+readFile((data) => {
+  processUpperCase(data, (upperCaseFileName) => {
+    processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
+      processSort(lowerCaseFileName, (sortedFile) => {
+
+      });
+    });
   });
 });
-// processUpperCase(()=>{
-//     lowercase(()=>{
-//         sortedfile(()=>{
-//             deleteFiles()
-//         })
-//     })
-// })
+
