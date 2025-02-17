@@ -5,9 +5,9 @@
 import fs from "fs";
 
 function createDirecotry(dirName) {
-  fs.mkdir(dirName, (err) => {
+  fs.mkdir(dirName, { recursive: true }, (err) => {
     if (err) {
-      console.log("Directory already exist or error:", err.message);
+      console.log("Error While creating Directory:", err.message);
     } else {
       console.log("Directorry created successfully");
     }
