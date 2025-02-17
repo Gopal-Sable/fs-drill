@@ -28,7 +28,7 @@ function generateRandomName() {
 }
 const getRandomFilename = generateRandomName();
 
-function processUpperCase(fileName, callback) {
+function processUpperCase(callback) {
   fs.readFile("lipsum.txt", "utf8", (err, data) => {
     if (err) {
       console.error(err.message);
@@ -40,12 +40,16 @@ function processUpperCase(fileName, callback) {
           console.error(err.message);
           return;
         }
-        appendFilename(upperCaseFileName, callback);
+        appendFilename(upperCaseFileName, () => {
+          callback(upperCaseFileName);
+        });
       });
     }
   });
 }
 
+processUpperCase((upperCaseFileName) => {console.log("uppercase created");
+});
 // processUpperCase(()=>{
 //     lowercase(()=>{
 //         sortedfile(()=>{
