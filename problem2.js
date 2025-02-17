@@ -10,185 +10,46 @@
 */
 
 import fs from "fs";
-// readFileAndWriteInUpperCase("lipsum.txt");
-let fileNames = "fileNames.txt";
-function appendFile(fileName, data) {
-  data = data + "\n";
-  fs.appendFile(fileName, data, (err) => {
-    err && console.log(err.message);
+
+const filenamesFile = "filenames.txt";
+function appendFilename(filename, callback) {
+  fs.appendFile(filenamesFile, filename + "\n", (err) => {
+    if (err) return console.error("Error appending filename:", err.message);
+    callback();
   });
 }
 
-function readFile(fileName, cb) {
-  fs.readFile(fileName, "utf8", cb);
+function generateRandomName() {
+  let count = 0;
+  return () => {
+    count++;
+    return "file" + count + ".txt";
+  };
 }
-function writeFile(fileName, data, cb) {
-  fs.writeFile(fileName, data, cb);
-}
-main();
-function main() {
-  readFile("lipsum.txt", (err, data) => {
+const getRandomFilename = generateRandomName();
+
+function processUpperCase(fileName, callback) {
+  fs.readFile("lipsum.txt", "utf8", (err, data) => {
     if (err) {
-      console.log(err);
+      console.error(err.message);
     } else {
       let upperCaseData = data.toUpperCase();
-      let upperCaseFileName = getRandomName();
-      writeFile(upperCaseFileName, upperCaseData, (err) => {
+      const upperCaseFileName = getRandomFilename();
+      fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
         if (err) {
-          console.log(err.message);
-        } else {
-          appendFile(fileNames, upperCaseFileName);
+          console.error(err.message);
+          return;
         }
-      });
-      readFile(upperCaseFileName, (err, data) => {
-        if (err) {
-          console.log(err.message);
-        } else {
-          let lowercaseData = data.toLowerCase();
-          let lowercaseFileName = getRandomName();
-        }
+        appendFilename(upperCaseFileName, callback);
       });
     }
   });
 }
-// function readFileAndWriteInUpperCase(fileName) {
-//   fs.readFile(fileName, "utf-8", (err, data) => {
-//     if (err) {
-//       console.log(err.message);
-//       return;
-//     }
-//     console.log("file readed");
 
-//     let random = getRandomName();
-//     let upperCaseData = data.toUpperCase();
-//     writeFile(random, upperCaseData, (err) => {
-//       if (err) {
-//         console.log(err.message);
-//       } else {
-//         console.log("upperCase file created");
-
-//         appendFile(fileNames, random, (err) => {
-//           if (err) {
-//             console.log(err.message);
-//           } else {
-//             console.log("filename added");
-//             readFileAndWriteInlowerCase(random);
-//           }
-//         });
-//       }
-//     });
-//   });
-// }
-
-// function readFileAndWriteInlowerCase(fileName) {
-//   fs.readFile(fileName, "utf-8", (err, data) => {
-//     if (err) {
-//       console.log(err.message);
-//       return;
-//     }
-//     let random = getRandomName();
-//     let upperCaseData = data.toLowerCase().split(".").join("\n");
-//     writeFile(random, upperCaseData, (err) => {
-//       if (err) {
-//         console.log(err.message);
-//       } else {
-//         console.log("lowercase file Returned");
-
-//         appendFile(fileNames, random, (err) => {
-//           if (err) {
-//             console.log(err.message);
-//           } else {
-//             console.log("Filename Added");
-
-//             // SORT FILE IS REMANING
-//             sortAndWrite(fileNames, (err, data) => {
-//               if (err) {
-//                 console.log(err);
-//               } else {
-//                 let files = data.split("\n");
-//                 let sortedFileName = getRandomName();
-//                 files.map((file) => {
-//                   fs.readFile(file, "utf8", (err, data) => {
-//                     if (err) {
-//                       console.log(err);
-//                     } else {
-//                       fs.appendFile(sortedFileName, data, (err) => {
-//                         if (err) {
-//                           console.log(err.message);
-//                         }
-//                       });
-//                     }
-//                   });
-//                 });
-
-//                 fs.readFile(sortedFileName, "utf8", (err, data) => {
-//                   if (err) {
-//                     console.log(err.message);
-//                   } else {
-//                     let sortedData = data.split(" ").sort((a, b) => a < b);
-//                     fs.writeFile(sortedFileName, sortedData, (err) => {
-//                       if (err) {
-//                         console.log(err.message);
-//                       } else {
-//                         appendFile(fileNames, sortedFileName, (err) => {
-//                           if (err) {
-//                             console.log(err.message);
-//                           } else {
-//                             deleteFiles(fileNames, (err, data) => {
-//                               if (err) {
-//                                 console.log(err);
-//                               } else {
-//                                 let files = data.split("\n");
-//                                 files.map((file) => {
-//                                   // fs.rm(file, (err) => {
-//                                   //   if (err) {
-//                                   //     console.log(err);
-//                                   //   } else {
-//                                   //     console.log(files + " file deleted");
-//                                   //   }
-//                                   // });
-//                                 });
-//                               }
-//                             });
-//                           }
-//                         });
-//                       }
-//                     });
-//                   }
-//                 });
-//               }
-//             });
-//           }
-//         });
-//       }
-//     });
-//   });
-// }
-
-// function sortAndWrite(fileName, cb) {
-//   fs.readFile(fileName, "utf8", cb);
-// }
-
-// function deleteFiles(fileName, cb) {
-//   fs.readFile(fileName, "utf8", cb);
-// }
-
-// function writeFile(fileName, data, cb) {
-//   fs.writeFile(fileName, data, cb);
-// }
-
-// function appendFile(fileName, data, cb) {
-//   data = data + "\n";
-//   fs.appendFile(fileName, data, cb);
-// }
-
-function generateRandomName() {
-  let name = "file";
-  let count = 0;
-  return () => {
-    count++;
-    return name + count + ".txt";
-  };
-}
-const getRandomName = generateRandomName();
-export {};
+// processUpperCase(()=>{
+//     lowercase(()=>{
+//         sortedfile(()=>{
+//             deleteFiles()
+//         })
+//     })
+// })
