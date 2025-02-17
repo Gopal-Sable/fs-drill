@@ -14,7 +14,9 @@ import fs from "fs";
 const filenamesFile = "filenames.txt";
 function appendFilename(filename, callback) {
   fs.appendFile(filenamesFile, filename + "\n", (err) => {
-    if (err) return console.error("Error appending filename:", err.message);
+    if (err) {
+      return console.error("Error appending filename:", err.message);
+    }
     callback();
   });
 }
@@ -31,15 +33,17 @@ const getRandomFilename = generateRandomName();
 function processUpperCase(callback) {
   fs.readFile("lipsum.txt", "utf8", (err, data) => {
     if (err) {
-      console.error(err.message);
+      console.error("Error reading lipsum.txt: " + err.message);
     } else {
       let upperCaseData = data.toUpperCase();
       const upperCaseFileName = getRandomFilename();
       fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
         if (err) {
-          console.error(err.message);
+          console.error("Error in writting uppercase  file " + err.message);
           return;
         }
+        console.log(upperCaseFileName+" created");
+        
         appendFilename(upperCaseFileName, () => {
           callback(upperCaseFileName);
         });
@@ -48,7 +52,32 @@ function processUpperCase(callback) {
   });
 }
 
-processUpperCase((upperCaseFileName) => {console.log("uppercase created");
+function processLowerCase(inputFileName, callback) {
+  fs.readFile(inputFileName, "utf8", (err, data) => {
+    if (err) {
+      console.error(
+        "error in reading input file for lowercase : " + err.message
+      );
+    } else {
+      let lowerCaseData = data.toLocaleLowerCase();
+      let lowerCaseFileName = getRandomFilename();
+      fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
+        if (err) {
+          console.error("Error in writting lower case file: " + err.message);
+        } else {
+          appendFilename(lowerCaseFileName, () => {
+            callback(lowerCaseFileName);
+          });
+        }
+      });
+    }
+  });
+}
+
+processUpperCase((upperCaseFileName) => {
+  processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
+    console.log("lowerCase file created", lowerCaseFileName);
+  });
 });
 // processUpperCase(()=>{
 //     lowercase(()=>{
