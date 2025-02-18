@@ -63,13 +63,13 @@ function processLowerCase(inputFileName, callback) {
         "error in reading input file for lowercase : " + err.message
       );
     } else {
-      let lowerCaseData = data.toLocaleLowerCase();
+      let lowerCaseData = data.toLowerCase();
       let lowerCaseFileName = getRandomFilename();
       fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
         if (err) {
           console.error("Error in writting lower case file: " + err.message);
         } else {
-          console.log(upperCaseFileName + " created");
+          console.log(lowerCaseFileName + " created");
           appendFilename(lowerCaseFileName, () => {
             callback(lowerCaseFileName);
           });
@@ -152,12 +152,11 @@ function deleteFiles() {
     }
   });
 }
-readFile((data) => {
-  processUpperCase(data, (upperCaseFileName) => {
-    processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
-      processSort(upperCaseFileName, lowerCaseFileName, (sortedFile) => {
-        setTimeout(deleteFiles, 3000);
-      });
-    });
-  });
-});
+
+export {
+  readFile,
+  processUpperCase,
+  processLowerCase,
+  processSort,
+  deleteFiles,
+};
