@@ -69,6 +69,7 @@ function processLowerCase(inputFileName, callback) {
         if (err) {
           console.error("Error in writting lower case file: " + err.message);
         } else {
+          console.log(upperCaseFileName + " created");
           appendFilename(lowerCaseFileName, () => {
             callback(lowerCaseFileName);
           });
@@ -127,11 +128,36 @@ function processSort(inputFile1, inputFile2, callback) {
   });
 }
 
-function deletedFiles(params) {}
+function deleteFiles() {
+  fs.readFile(filenamesFile, "utf8", (err, data) => {
+    if (err) {
+      console.error("Problem in reading filenames file: ", err.message);
+    } else {
+      const filenames = data.trim().split("\n");
+      filenames.map((file) => {
+        fs.unlink(file, (err) => {
+          if (err) {
+            console.error(`error deleting ${file} : ${err.message}`);
+          }
+          console.log(`${file} deleted`);
+        });
+      });
+      fs.unlink(filenamesFile, (err) => {
+        if (err) {
+          console.error("Error deleting filenames file: ", err.message);
+        } else {
+          console.log(`${filenamesFile} deleted`);
+        }
+      });
+    }
+  });
+}
 readFile((data) => {
   processUpperCase(data, (upperCaseFileName) => {
     processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
-      processSort(upperCaseFileName, lowerCaseFileName, (sortedFile) => {});
+      processSort(upperCaseFileName, lowerCaseFileName, (sortedFile) => {
+        setTimeout(deleteFiles, 3000);
+      });
     });
   });
 });
