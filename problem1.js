@@ -3,7 +3,7 @@
 // 2. Delete those files simultaneously
 
 import fs from "fs";
-let filesCount = 5;
+
 function createDirecotry(dirName, filesCount, callback) {
   fs.mkdir(dirName, { recursive: true }, (err) => {
     if (err) {
@@ -14,9 +14,10 @@ function createDirecotry(dirName, filesCount, callback) {
     }
   });
 }
+
 function createFiles(dirName, fileCount, callback) {
-  if (fileCount<1) {
-    return 
+  if (fileCount < 1) {
+    return;
   }
   let count = 0;
   let fileNames = [];
@@ -37,13 +38,14 @@ function createFiles(dirName, fileCount, callback) {
     callback(fileNames);
   }
 }
+
 function removeFiles(path) {
   path.map((file) => {
     fs.rm(file, (err) => {
       if (err) {
         console.log(err.message);
       } else {
-        console.log("File deleted successfully");
+        console.log(`${file} deleted successfully`);
       }
     });
   });
