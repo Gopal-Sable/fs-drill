@@ -42,7 +42,7 @@ function readFile(callback) {
 }
 
 function processUpperCase(data, callback) {
-  let upperCaseData = data.toUpperCase().split(".").join("\n");
+  let upperCaseData = data.toUpperCase();
   const upperCaseFileName = getRandomFilename();
   fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
     if (err) {
@@ -64,7 +64,7 @@ function processLowerCase(inputFileName, callback) {
         "error in reading input file for lowercase : " + err.message
       );
     } else {
-      let lowerCaseData = data.toLowerCase();
+      let lowerCaseData = data.toLowerCase().split(".").join("\n");
       let lowerCaseFileName = getRandomFilename();
       fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
         if (err) {
@@ -143,9 +143,9 @@ function deleteFiles() {
           console.log(`${file} deleted`);
         });
       });
-      fs.unlink(filenamesFile, (err) => {
+      fs.writeFile(filenamesFile, "", (err) => {
         if (err) {
-          console.error("Error deleting filenames file: ", err.message);
+          console.error("Error deleting filenames from file: ", err.message);
         } else {
           console.log(`${filenamesFile} deleted`);
         }
