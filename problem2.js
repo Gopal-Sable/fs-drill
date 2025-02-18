@@ -64,7 +64,11 @@ function processLowerCase(inputFileName, callback) {
         "error in reading input file for lowercase : " + err.message
       );
     } else {
-      let lowerCaseData = data.toLowerCase().split(".").join("\n");
+      let lowerCaseData = data
+        .toLowerCase()
+        .split(".")
+        .map((line) => line.trim())
+        .join("\n");
       let lowerCaseFileName = getRandomFilename();
       fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
         if (err) {
@@ -109,7 +113,7 @@ function processSort(inputFile1, inputFile2, callback) {
               );
             }
             const sortedData = data
-              .split(" ")
+              .split(/\s/)
               .sort((a, b) => a.localeCompare(b))
               .join("\n");
 
