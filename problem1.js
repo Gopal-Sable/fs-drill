@@ -20,10 +20,8 @@ function createFiles(dirName, fileCount, callback) {
     return;
   }
   let count = 0;
-  let fileNames = [];
   for (let i = 1; i <= fileCount; i++) {
     let fileName = dirName + "/file" + i + ".json";
-    fileNames.push(fileName);
     count++;
     let data = { fileName, number: i };
     fs.writeFile(fileName, JSON.stringify(data), (e) => {
@@ -31,23 +29,19 @@ function createFiles(dirName, fileCount, callback) {
         console.log(e.message);
       } else {
         console.log(`${fileName} created successfully`);
+        callback(fileName);
       }
     });
-  }
-  if (count == fileCount) {
-    callback(fileNames);
   }
 }
 
-function removeFiles(path) {
-  path.map((file) => {
-    fs.rm(file, (err) => {
-      if (err) {
-        console.log(err.message);
-      } else {
-        console.log(`${file} deleted successfully`);
-      }
-    });
+function removeFiles(file) {
+  fs.rm(file, (err) => {
+    if (err) {
+      console.log(err.message);
+    } else {
+      console.log(`${file} deleted successfully`);
+    }
   });
 }
 
