@@ -123,7 +123,7 @@ function processSort(inputFile1, inputFile2, callback) {
               }
               console.log(`Sorted file created: ${sortedFile}`);
               appendFilename(sortedFile, () => {
-                callback(sortedFile);
+                callback();
               });
             });
           });

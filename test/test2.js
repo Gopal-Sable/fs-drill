@@ -9,7 +9,7 @@ import {
 readFile((data) => {
   processUpperCase(data, (upperCaseFileName) => {
     processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
-      processSort(upperCaseFileName, lowerCaseFileName, (sortedFile) => {
+      processSort(upperCaseFileName, lowerCaseFileName, () => {
         setTimeout(deleteFiles, 3000);
       });
     });
