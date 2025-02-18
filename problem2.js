@@ -78,37 +78,60 @@ function processLowerCase(inputFileName, callback) {
   });
 }
 
-function processSort(inputFile, callback) {
-  fs.readFile(inputFile, "utf8", (err, data) => {
+function processSort(inputFile1, inputFile2, callback) {
+  fs.readFile(inputFile1, "utf8", (err, data) => {
     if (err) {
-      return console.error("Error reading lowercase file:", err.message);
+      return console.error("Error reading upper case file:", err.message);
     }
 
     const sortedFile = getRandomFilename();
-    const sortedData = data
-      .split(" ")
-      .sort((a, b) => a.localeCompare(b))
-      .join(" ");
-
-    fs.writeFile(sortedFile, sortedData, (err) => {
+    fs.appendFile(sortedFile, data, (err) => {
       if (err) {
         return console.error("Error writing sorted file:", err.message);
       }
-      console.log(`Sorted file created: ${sortedFile}`);
-      appendFilename(sortedFile, () => {
-        callback(sortedFile);
+      fs.readFile(inputFile2, "utf8", (err, data) => {
+        if (err) {
+          console.error("Error in reading second File: ", err.message);
+        }
+        fs.appendFile(sortedFile, data, (err) => {
+          if (err) {
+            return console.error(
+              "Error in updating sorted file: " + err.message
+            );
+          }
+          fs.readFile(sortedFile, "utf-8", (err, data) => {
+            if (err) {
+              return console.error(
+                "error in reading sorted file: ",
+                err.message
+              );
+            }
+            const sortedData = data
+              .split(" ")
+              .sort((a, b) => a.localeCompare(b))
+              .join(" ");
+
+            fs.writeFile(sortedFile, sortedData, (err) => {
+              if (err) {
+                return console.error("Error writing sorted file:", err.message);
+              }
+              console.log(`Sorted file created: ${sortedFile}`);
+              appendFilename(sortedFile, () => {
+                callback(sortedFile);
+              });
+            });
+          });
+        });
       });
     });
   });
 }
 
+function deletedFiles(params) {}
 readFile((data) => {
   processUpperCase(data, (upperCaseFileName) => {
     processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
-      processSort(lowerCaseFileName, (sortedFile) => {
-
-      });
+      processSort(upperCaseFileName, lowerCaseFileName, (sortedFile) => {});
     });
   });
 });
-
