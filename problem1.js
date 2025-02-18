@@ -15,6 +15,9 @@ function createDirecotry(dirName, filesCount, callback) {
   });
 }
 function createFiles(dirName, fileCount, callback) {
+  if (fileCount<1) {
+    return 
+  }
   let count = 0;
   let fileNames = [];
   for (let i = 1; i <= fileCount; i++) {
