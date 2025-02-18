@@ -111,7 +111,7 @@ function processSort(inputFile1, inputFile2, callback) {
             const sortedData = data
               .split(" ")
               .sort((a, b) => a.localeCompare(b))
-              .join(" ");
+              .join("\n");
 
             fs.writeFile(sortedFile, sortedData, (err) => {
               if (err) {
