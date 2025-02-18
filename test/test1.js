@@ -1,6 +1,6 @@
-import { createDirecotry, createFiles, removeFile } from "../problem1.js";
-let data={name: "gopal", email:"abc@xyz.com"}
-let dirName = "./dir1";
-createDirecotry(dirName);
-createFiles(dirName + "//file.json", JSON.stringify(data));
-removeFile(dirName + "//file.json");
+import { createDirecotry, createFiles, removeFiles } from "../problem1.js";
+createDirecotry("dir1", filesCount, (dirName, fileCount) => {
+    createFiles(dirName, fileCount, (fileNames) => {
+      removeFiles(fileNames);
+    });
+  });
