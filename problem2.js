@@ -12,6 +12,7 @@
 import fs from "fs";
 
 const filenamesFile = "filenames.txt";
+
 function appendFilename(filename, callback) {
   fs.appendFile(filenamesFile, filename + "\n", (err) => {
     if (err) {
@@ -41,7 +42,7 @@ function readFile(callback) {
 }
 
 function processUpperCase(data, callback) {
-  let upperCaseData = data.toUpperCase();
+  let upperCaseData = data.toUpperCase().split(".").join("\n");
   const upperCaseFileName = getRandomFilename();
   fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
     if (err) {
