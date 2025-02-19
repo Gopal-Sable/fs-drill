@@ -41,16 +41,20 @@ function readFile(filename, callback) {
   });
 }
 
+function handdleWriteFile(filename, data, callback) {
+  fs.writeFile(filename, data, (err) => {
+    if (err) {
+      return console.error(`Error in writing ${filename}: ${err.message}`);
+    }
+    console.log(filename + " created");
+    callback();
+  });
+}
+
 function processUpperCase(data, callback) {
   let upperCaseData = data.toUpperCase();
   const upperCaseFileName = getRandomFilename();
-  fs.writeFile(upperCaseFileName, upperCaseData, (err) => {
-    if (err) {
-      console.error("Error in writting uppercase  file " + err.message);
-      return;
-    }
-    console.log(upperCaseFileName + " created");
-
+  handdleWriteFile(upperCaseFileName, upperCaseData, () => {
     appendFilename(upperCaseFileName, () => {
       callback(upperCaseFileName);
     });
@@ -65,15 +69,10 @@ function processLowerCase(inputFileName, callback) {
       .map((line) => line.trim())
       .join("\n");
     let lowerCaseFileName = getRandomFilename();
-    fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
-      if (err) {
-        console.error("Error in writting lower case file: " + err.message);
-      } else {
-        console.log(lowerCaseFileName + " created");
-        appendFilename(lowerCaseFileName, () => {
-          callback(lowerCaseFileName);
-        });
-      }
+    handdleWriteFile(lowerCaseFileName, lowerCaseData, () => {
+      appendFilename(lowerCaseFileName, () => {
+        callback(lowerCaseFileName);
+      });
     });
   });
 }
@@ -88,11 +87,7 @@ function processSort(inputFile1, inputFile2, callback) {
         .join("\n");
 
       const sortedFile = getRandomFilename();
-      fs.writeFile(sortedFile, sortedData, (err) => {
-        if (err) {
-          return console.error("Error writing sorted file:", err.message);
-        }
-        console.log(`Sorted file created: ${sortedFile}`);
+      handdleWriteFile(sortedFile, sortedData, () => {
         appendFilename(sortedFile, () => {
           callback();
         });
