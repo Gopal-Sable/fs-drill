@@ -6,11 +6,11 @@ import {
   readFile,
 } from "../problem2.js";
 
-readFile((data) => {
+readFile("lipsum.txt", (data) => {
   processUpperCase(data, (upperCaseFileName) => {
     processLowerCase(upperCaseFileName, (lowerCaseFileName) => {
       processSort(upperCaseFileName, lowerCaseFileName, () => {
-        setTimeout(deleteFiles, 3000);
+        // setTimeout(deleteFiles, 3000);
       });
     });
   });

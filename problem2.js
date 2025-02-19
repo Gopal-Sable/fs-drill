@@ -31,10 +31,10 @@ function generateRandomName() {
 }
 const getRandomFilename = generateRandomName();
 
-function readFile(callback) {
-  fs.readFile("lipsum.txt", "utf8", (err, data) => {
+function readFile(filename, callback) {
+  fs.readFile(filename, "utf8", (err, data) => {
     if (err) {
-      console.error("Error reading lipsum.txt: " + err.message);
+      console.error(`Error reading ${filename}: ${err.message}`);
     } else {
       callback(data);
     }
@@ -85,48 +85,28 @@ function processLowerCase(inputFileName, callback) {
 }
 
 function processSort(inputFile1, inputFile2, callback) {
-  fs.readFile(inputFile1, "utf8", (err, data) => {
+  fs.readFile(inputFile1, "utf8", (err, data1) => {
     if (err) {
       return console.error("Error reading upper case file:", err.message);
     }
-
-    const sortedFile = getRandomFilename();
-    fs.appendFile(sortedFile, data, (err) => {
+    fs.readFile(inputFile2, "utf8", (err, data2) => {
       if (err) {
-        return console.error("Error writing sorted file:", err.message);
+       return console.error("Error in reading second File: ", err.message);
       }
-      fs.readFile(inputFile2, "utf8", (err, data) => {
-        if (err) {
-          console.error("Error in reading second File: ", err.message);
-        }
-        fs.appendFile(sortedFile, data, (err) => {
-          if (err) {
-            return console.error(
-              "Error in updating sorted file: " + err.message
-            );
-          }
-          fs.readFile(sortedFile, "utf-8", (err, data) => {
-            if (err) {
-              return console.error(
-                "error in reading sorted file: ",
-                err.message
-              );
-            }
-            const sortedData = data
-              .split(/\s/)
-              .sort((a, b) => a.localeCompare(b))
-              .join("\n");
+      let filesContent = data1 + data2;
+      const sortedData = filesContent
+        .split(/\s/)
+        .sort((a, b) => a.localeCompare(b))
+        .join("\n");
 
-            fs.writeFile(sortedFile, sortedData, (err) => {
-              if (err) {
-                return console.error("Error writing sorted file:", err.message);
-              }
-              console.log(`Sorted file created: ${sortedFile}`);
-              appendFilename(sortedFile, () => {
-                callback();
-              });
-            });
-          });
+      const sortedFile = getRandomFilename();
+      fs.writeFile(sortedFile, sortedData, (err) => {
+        if (err) {
+          return console.error("Error writing sorted file:", err.message);
+        }
+        console.log(`Sorted file created: ${sortedFile}`);
+        appendFilename(sortedFile, () => {
+          callback();
         });
       });
     });
