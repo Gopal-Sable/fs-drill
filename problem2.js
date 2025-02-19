@@ -102,7 +102,7 @@ function deleteFiles() {
     filenames.forEach((file) => {
       fs.unlink(file, (err) => {
         if (err) {
-          console.error(`error deleting ${file} : ${err.message}`);
+          return console.error(`error deleting ${file} : ${err.message}`);
         }
         console.log(`${file} deleted`);
       });
