@@ -58,41 +58,29 @@ function processUpperCase(data, callback) {
 }
 
 function processLowerCase(inputFileName, callback) {
-  fs.readFile(inputFileName, "utf8", (err, data) => {
-    if (err) {
-      console.error(
-        "error in reading input file for lowercase : " + err.message
-      );
-    } else {
-      let lowerCaseData = data
-        .toLowerCase()
-        .split(".")
-        .map((line) => line.trim())
-        .join("\n");
-      let lowerCaseFileName = getRandomFilename();
-      fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
-        if (err) {
-          console.error("Error in writting lower case file: " + err.message);
-        } else {
-          console.log(lowerCaseFileName + " created");
-          appendFilename(lowerCaseFileName, () => {
-            callback(lowerCaseFileName);
-          });
-        }
-      });
-    }
+  readFile(inputFileName, (data) => {
+    let lowerCaseData = data
+      .toLowerCase()
+      .split(".")
+      .map((line) => line.trim())
+      .join("\n");
+    let lowerCaseFileName = getRandomFilename();
+    fs.writeFile(lowerCaseFileName, lowerCaseData, (err) => {
+      if (err) {
+        console.error("Error in writting lower case file: " + err.message);
+      } else {
+        console.log(lowerCaseFileName + " created");
+        appendFilename(lowerCaseFileName, () => {
+          callback(lowerCaseFileName);
+        });
+      }
+    });
   });
 }
 
 function processSort(inputFile1, inputFile2, callback) {
-  fs.readFile(inputFile1, "utf8", (err, data1) => {
-    if (err) {
-      return console.error("Error reading upper case file:", err.message);
-    }
-    fs.readFile(inputFile2, "utf8", (err, data2) => {
-      if (err) {
-       return console.error("Error in reading second File: ", err.message);
-      }
+  readFile(inputFile1, (data1) => {
+    readFile(inputFile2, (data2) => {
       let filesContent = data1 + data2;
       const sortedData = filesContent
         .split(/\s/)
@@ -114,27 +102,23 @@ function processSort(inputFile1, inputFile2, callback) {
 }
 
 function deleteFiles() {
-  fs.readFile(filenamesFile, "utf8", (err, data) => {
-    if (err) {
-      console.error("Problem in reading filenames file: ", err.message);
-    } else {
-      const filenames = data.trim().split("\n");
-      filenames.map((file) => {
-        fs.unlink(file, (err) => {
-          if (err) {
-            console.error(`error deleting ${file} : ${err.message}`);
-          }
-          console.log(`${file} deleted`);
-        });
-      });
-      fs.writeFile(filenamesFile, "", (err) => {
+  readFile(filenamesFile, (data) => {
+    const filenames = data.trim().split("\n");
+    filenames.forEach((file) => {
+      fs.unlink(file, (err) => {
         if (err) {
-          console.error("Error deleting filenames from file: ", err.message);
-        } else {
-          console.log(`${filenamesFile} deleted`);
+          console.error(`error deleting ${file} : ${err.message}`);
         }
+        console.log(`${file} deleted`);
       });
-    }
+    });
+    fs.writeFile(filenamesFile, "", (err) => {
+      if (err) {
+        console.error("Error deleting filenames from file: ", err.message);
+      } else {
+        console.log(`${filenamesFile} names cleared.`);
+      }
+    });
   });
 }
 
