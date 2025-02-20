@@ -12,7 +12,7 @@
 import fs from "fs";
 
 const filenamesFile = "filenames.txt";
-
+//  function for appending file name in filename.txt
 function appendFilename(filename, callback) {
   fs.appendFile(filenamesFile, filename + "\n", (err) => {
     if (err) {
@@ -22,6 +22,7 @@ function appendFilename(filename, callback) {
   });
 }
 
+// generating file names
 function generateRandomName() {
   let count = 0;
   return () => {
@@ -31,6 +32,7 @@ function generateRandomName() {
 }
 const getRandomFilename = generateRandomName();
 
+//  Function for read files
 function readFile(filename, callback) {
   fs.readFile(filename, "utf8", (err, data) => {
     if (err) {
@@ -41,6 +43,7 @@ function readFile(filename, callback) {
   });
 }
 
+// function for writting files
 function handdleWriteFile(filename, data, callback) {
   fs.writeFile(filename, data, (err) => {
     if (err) {
@@ -51,6 +54,7 @@ function handdleWriteFile(filename, data, callback) {
   });
 }
 
+//  function for convert content in uppercase and write in file
 function processUpperCase(data, callback) {
   let upperCaseData = data.toUpperCase();
   const upperCaseFileName = getRandomFilename();
@@ -61,6 +65,7 @@ function processUpperCase(data, callback) {
   });
 }
 
+//  function for convert content in lowercase and write in file
 function processLowerCase(inputFileName, callback) {
   readFile(inputFileName, (data) => {
     let lowerCaseData = data
@@ -77,6 +82,7 @@ function processLowerCase(inputFileName, callback) {
   });
 }
 
+//  function for sort content and write in file
 function processSort(inputFile1, inputFile2, callback) {
   readFile(inputFile1, (data1) => {
     readFile(inputFile2, (data2) => {
@@ -96,6 +102,7 @@ function processSort(inputFile1, inputFile2, callback) {
   });
 }
 
+//  delete files
 function deleteFiles() {
   readFile(filenamesFile, (data) => {
     const filenames = data.trim().split("\n");
