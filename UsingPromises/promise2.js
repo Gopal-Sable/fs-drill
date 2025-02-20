@@ -49,9 +49,10 @@ function writeInUppercase(data) {
 }
 
 function uppendFilenames(fileNameToUppend) {
-  fs.appendFile(filenamesFile, fileNameToUppend+"\n")
+  return fs
+    .appendFile(filenamesFile, fileNameToUppend + "\n")
     .then(() => {
-      console.log(`${fileNameToUppend} added in filenames`);
+      return console.log(`${fileNameToUppend} added in filenames`);
     })
     .catch((err) => {
       console.error("error in appending file name: ", err.message);
@@ -74,19 +75,53 @@ function writeInLowercase(data) {
       return lowerCaseFileName;
     })
     .then((res) => {
-      uppendFilenames(res);
+      return uppendFilenames(res);
     })
     .catch((err) => {
       console.error(err.message);
     });
 }
 
+function removeFiles() {
+  readFile(filenamesFile).then((res) => {
+    const filenames = res.trim().split("\n");
+    const allPromises = [];
+
+    filenames.forEach((file) => {
+      allPromises.push(
+        fs
+          .unlink(file)
+          .then(() => {
+            console.log(`${file} removed`);
+          })
+          .catch((err) => {
+            console.error("Error: ", err.message);
+          })
+      );
+    });
+
+    return Promise.all(allPromises)
+      .then(() => {
+        fs.writeFile(filenamesFile, "")
+          .then(() => {
+            console.log("file names removed from file");
+          })
+          .catch((err) => {
+            console.error(err.message);
+          });
+      })
+      .catch((err) => console.error(err.message));
+  });
+}
 readFile("lipsum.txt")
   .then((res) => {
     return writeInUppercase(res);
   })
   .then((res) => {
-    writeInLowercase(res);
+    return writeInLowercase(res);
+  })
+  .then(() => {
+    removeFiles();
   })
   .catch((err) => {
     console.log("Error:", err);
