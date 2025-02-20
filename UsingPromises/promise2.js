@@ -82,6 +82,30 @@ function writeInLowercase(data) {
     });
 }
 
+function handdleSort() {
+  const sortFileName = getRandomFilename();
+  
+  return readFile("lipsum.txt")
+    .then((res) => {
+
+      let sortedContent = res
+        .split(/\s/)
+        .sort((a, b) => a.localeCompare(b))
+        .join("\n");
+      return fs.writeFile(sortFileName, sortedContent);
+    })
+    .then(() => {
+      console.log(`${sortFileName} created`);
+      return sortFileName;
+    })
+    .then((res) => {
+      return uppendFilenames(res);
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
 function removeFiles() {
   readFile(filenamesFile).then((res) => {
     const filenames = res.trim().split("\n");
@@ -121,7 +145,10 @@ readFile("lipsum.txt")
     return writeInLowercase(res);
   })
   .then(() => {
-    removeFiles();
+    return handdleSort();
+  })
+  .then(() => {
+    return removeFiles();
   })
   .catch((err) => {
     console.log("Error:", err);
