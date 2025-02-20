@@ -40,10 +40,8 @@ function writeInUppercase(data) {
     .writeFile(upperCaseFileName, upperCaseData)
     .then(() => {
       console.log(`${upperCaseFileName} created`);
-      return data;
-    })
-    .then((res) => {
-      uppendFilenames(res);
+      uppendFilenames(upperCaseFileName);
+      return upperCaseData;
     })
     .catch((err) => {
       console.error(err.message);
@@ -51,7 +49,7 @@ function writeInUppercase(data) {
 }
 
 function uppendFilenames(fileNameToUppend) {
-  fs.appendFile(filenamesFile, fileNameToUppend)
+  fs.appendFile(filenamesFile, fileNameToUppend+"\n")
     .then(() => {
       console.log(`${fileNameToUppend} added in filenames`);
     })
@@ -65,8 +63,8 @@ function writeInLowercase(data) {
   const lowerCaseData = data
     .toLowerCase()
     .split(".")
-    .forEach((line) => {
-      line.trim();
+    .map((line) => {
+      return line.trim();
     })
     .join("\n");
   return fs
@@ -88,8 +86,8 @@ readFile("lipsum.txt")
     return writeInUppercase(res);
   })
   .then((res) => {
-    return writeInLowercase(res);
+    writeInLowercase(res);
   })
   .catch((err) => {
-    console.log("dsjnfna", err);
+    console.log("Error:", err);
   });
