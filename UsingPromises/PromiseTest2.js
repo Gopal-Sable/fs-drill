@@ -4,7 +4,7 @@ import {
   writeInLowercase,
   removeFiles,
   handdleSort,
-} from "promise2.js";
+} from "./promise2.js";
 
 readFile("lipsum.txt")
   .then((res) => {
