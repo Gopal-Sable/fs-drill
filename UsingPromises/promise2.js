@@ -113,26 +113,23 @@ function handdleSort() {
 
 // Function for deleting files
 function removeFiles() {
-  readFile(filenamesFile).then((res) => {
+  return readFile(filenamesFile).then((res) => {
     const filenames = res.trim().split("\n");
-    const allPromises = [];
-
-    filenames.forEach((file) => {
-      allPromises.push(
-        fs
-          .unlink(file)
-          .then(() => {
-            console.log(`${file} removed`);
-          })
-          .catch((err) => {
-            console.error("Error: ", err.message);
-          })
-      );
+    const allPromises = filenames.map((file) => {
+      return fs
+        .unlink(file)
+        .then(() => {
+          console.log(`${file} removed`);
+        })
+        .catch((err) => {
+          console.error("Error: ", err.message);
+        });
     });
 
     return Promise.all(allPromises)
       .then(() => {
-        fs.writeFile(filenamesFile, "")
+        return fs
+          .writeFile(filenamesFile, "")
           .then(() => {
             console.log("file names removed from file");
           })
