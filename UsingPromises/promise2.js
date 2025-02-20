@@ -84,10 +84,9 @@ function writeInLowercase(data) {
 
 function handdleSort() {
   const sortFileName = getRandomFilename();
-  
+
   return readFile("lipsum.txt")
     .then((res) => {
-
       let sortedContent = res
         .split(/\s/)
         .sort((a, b) => a.localeCompare(b))
@@ -137,19 +136,11 @@ function removeFiles() {
       .catch((err) => console.error(err.message));
   });
 }
-readFile("lipsum.txt")
-  .then((res) => {
-    return writeInUppercase(res);
-  })
-  .then((res) => {
-    return writeInLowercase(res);
-  })
-  .then(() => {
-    return handdleSort();
-  })
-  .then(() => {
-    return removeFiles();
-  })
-  .catch((err) => {
-    console.log("Error:", err);
-  });
+
+export {
+  readFile,
+  writeInUppercase,
+  writeInLowercase,
+  removeFiles,
+  handdleSort,
+};
