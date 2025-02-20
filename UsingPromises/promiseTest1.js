@@ -2,12 +2,10 @@ import { createDirecotry, createFiles, removeFiles } from "./promise1.js";
 
 createDirecotry("dir1")
   .then((res) => {
-    createFiles(res, 10);
-    return res;
+    return createFiles(res, 10);
   })
-  .then((res) => {
-    console.log(res);
-    return removeFiles(res);
+  .then(() => {
+    return removeFiles("dir1");
   })
   .catch((err) => {
     console.log("Error :", err.message);

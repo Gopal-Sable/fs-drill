@@ -20,19 +20,22 @@ function createFiles(dirName, fileCount) {
   if (fileCount < 1) {
     return;
   }
-
+  const allPromises = [];
   for (let i = 1; i <= fileCount; i++) {
     let fileName = dirName + "/file" + i + ".json";
     let data = { fileName, number: i };
-    fs.writeFile(fileName, JSON.stringify(data))
-      .then(() => {
-        console.log(`${fileName}`);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    allPromises.push(
+      fs
+        .writeFile(fileName, JSON.stringify(data))
+        .then(() => {
+          console.log(`${fileName}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    );
   }
-  // return
+  return Promise.allSettled(allPromises);
 }
 
 function removeFiles(dirName) {
