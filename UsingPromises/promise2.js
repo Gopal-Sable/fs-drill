@@ -13,6 +13,7 @@ const { default: fs } = await import("fs/promises");
 
 const filenamesFile = "filenames.txt";
 
+// function for getting random name
 function generateRandomName() {
   let count = 0;
   return () => {
@@ -22,6 +23,7 @@ function generateRandomName() {
 }
 const getRandomFilename = generateRandomName();
 
+// function for reading file
 function readFile(filename) {
   return fs
     .readFile(filename, "utf8")
@@ -33,6 +35,7 @@ function readFile(filename) {
     });
 }
 
+// function for writting file in uppercase
 function writeInUppercase(data) {
   const upperCaseFileName = getRandomFilename();
   const upperCaseData = data.toUpperCase();
@@ -48,6 +51,7 @@ function writeInUppercase(data) {
     });
 }
 
+//  function for adding file names to file
 function uppendFilenames(fileNameToUppend) {
   return fs
     .appendFile(filenamesFile, fileNameToUppend + "\n")
@@ -59,6 +63,7 @@ function uppendFilenames(fileNameToUppend) {
     });
 }
 
+// function for writting in Lower case
 function writeInLowercase(data) {
   const lowerCaseFileName = getRandomFilename();
   const lowerCaseData = data
@@ -82,6 +87,7 @@ function writeInLowercase(data) {
     });
 }
 
+//  function for handle sort and write it in file
 function handdleSort() {
   const sortFileName = getRandomFilename();
 
@@ -105,6 +111,7 @@ function handdleSort() {
     });
 }
 
+// Function for deleting files
 function removeFiles() {
   readFile(filenamesFile).then((res) => {
     const filenames = res.trim().split("\n");
