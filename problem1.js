@@ -19,10 +19,8 @@ function createFiles(dirName, fileCount, callback) {
   if (fileCount < 1) {
     return;
   }
-  let count = 0;
   for (let i = 1; i <= fileCount; i++) {
     let fileName = dirName + "/file" + i + ".json";
-    count++;
     let data = { fileName, number: i };
     fs.writeFile(fileName, JSON.stringify(data), (e) => {
       if (e) {
