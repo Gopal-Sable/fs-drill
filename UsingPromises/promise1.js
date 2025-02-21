@@ -4,7 +4,7 @@
 
 const { default: fs } = await import("fs/promises");
 
-function createDirecotry(dirName) {
+function createDirectory(dirName) {
   return fs
     .mkdir(dirName, { recursive: true })
     .then(() => {
@@ -12,50 +12,42 @@ function createDirecotry(dirName) {
       return dirName;
     })
     .catch((err) => {
-      console.error(`Error creating directory ${dirName} :${err.message} `);
+      console.error(`Error creating directory ${dirName}: ${err.message}`);
     });
 }
 
 function createFiles(dirName, fileCount) {
-  if (fileCount < 1) {
-    return;
-  }
   const allPromises = [];
   for (let i = 1; i <= fileCount; i++) {
-    let fileName = dirName + "/file" + i + ".json";
+    let fileName = `${dirName}/file${i}.json`;
     let data = { fileName, number: i };
+    
     allPromises.push(
-      fs
-        .writeFile(fileName, JSON.stringify(data))
-        .then(() => {
-          console.log(`${fileName}`);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
+      fs.writeFile(fileName, JSON.stringify(data)).then(() => {
+        console.log(`${fileName} created`);
+      })
     );
   }
-  return Promise.allSettled(allPromises);
+  
+  return Promise.all(allPromises).catch((err) => {
+    console.error(`Error writing files: ${err.message}`);
+  });
 }
 
 function removeFiles(dirName) {
-  return fs
-    .readdir(dirName)
-    .then((files) => {
-      files.forEach((file) => {
-        let filePath = dirName + "/" + file;
-        fs.unlink(filePath)
-          .then(() => {
-            console.log(`${file} deleted successfully`);
-          })
-          .catch((err) => {
-            console.error(err.message);
-          });
+  return fs.readdir(dirName).then((files) => {
+    const deletePromises = files.map((file) => {
+      let filePath = `${dirName}/${file}`;
+      return fs.unlink(filePath).then(() => {
+        console.log(`${file} deleted successfully`);
       });
-    })
-    .catch((err) => {
-      console.log(err.message);
     });
+
+    return Promise.allSettled(deletePromises);
+  })
+  .catch((err) => {
+    console.error(`Error reading directory: ${err.message}`);
+  });
 }
 
-export { createFiles, removeFiles, createDirecotry };
+export { createFiles, removeFiles, createDirectory };

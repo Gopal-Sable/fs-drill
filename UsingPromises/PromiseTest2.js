@@ -17,7 +17,7 @@ readFile("lipsum.txt")
     return handdleSort();
   })
   .then(() => {
-    return removeFiles();
+    // return removeFiles();
   })
   .catch((err) => {
     console.log("Error:", err);
