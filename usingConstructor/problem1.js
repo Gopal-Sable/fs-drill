@@ -5,7 +5,7 @@ function createDirectory(dirName) {
   return new Promise((resolve, reject) => {
     fs.mkdir(dirName, { recursive: true }, (err) => {
       if (err) {
-        return reject(err); // Fix: Remove unnecessary function wrapping
+        return reject(err); 
       }
       console.log(`Directory ${dirName} created`);
       resolve(dirName);
@@ -32,8 +32,6 @@ function createFiles(dirName, numberOfFiles) {
 
       promises.push(filePromise);
     }
-
-    // Wait for all files to be created
     Promise.all(promises)
       .then(() => resolve(dirName))
       .catch(reject);
